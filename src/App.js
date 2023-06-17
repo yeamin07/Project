@@ -1,14 +1,12 @@
-import './App.css';
-import Form from './components/Form';
-import StudentSection from './components/StudentSection'
+import './App.css'
+import Router from './router/Router';
 
-const App = () => {
-  return (
-    <div className="App" >
-      <Form />
-      <StudentSection />
-    </div>
-  )
+const App = () => {    
+    return (
+        <div className='App'>   
+            <Router />
+        </div>
+    )
 }
 
-export default App;
+export default App
