@@ -4,6 +4,9 @@ import './App.css'
 
 const App = () => {
     const [title, setTitle] = useState('');
+    const [editableNotes, setEditableNotes] = useState(null);
+    const [isUpdate, setIsUpdate] = useState(false);
+
     const client = useQueryClient()
 
     const fetchAllNote = async () => {
@@ -28,7 +31,7 @@ const App = () => {
             },
             body: JSON.stringify(newNote)
         })
-        setTitle('')
+        setTitle('');
         return await res.json()
     }
 
@@ -37,6 +40,11 @@ const App = () => {
             client.invalidateQueries(['notes'])
         }
     })
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        noteCreateMutation.mutate(); 
+    }
 
     const removeHandler = async (id) => {
         const res = await fetch(`http://localhost:4000/notes/${id}`, {
@@ -51,26 +59,55 @@ const App = () => {
         }
     })
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        noteCreateMutation.mutate()
+    const editHandler = (id) => {
+        const tobeEditedNotes = data.find(item => item.id === id);
+        setEditableNotes(tobeEditedNotes);
+        setTitle(tobeEditedNotes.title);
+        setIsUpdate(true);
     }
 
+    const updateHandler = async (note) => {
+        const res = await fetch(`http://localhost:4000/notes/${note.id}`,{
+            headers: {
+                'Content-type': 'application/json'
+            },
+            method: 'PATCH',
+            body: JSON.stringify(note)
+        })
+        return await res.json()
+    }
+ 
+
+    const updateMutation = useMutation((note) => updateHandler(note), {
+        onSuccess: () => {
+            client.invalidateQueries(['notes'])
+        }
+    })
+
+    const updateSubmit = (e) => {
+        e.preventDefault();
+        updateMutation.mutate(editableNotes)
+        setIsUpdate(false); // Reset isUpdate to false after updating
+    }
+    
     if (isLoading) {
         return <div>Loading.....</div>
     }
 
     return (
         <div className='App'>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
-                <button type='submit'>Create Note</button>
+                <button type='submit' onClick={isUpdate ? (e)=>updateSubmit(e) : (e)=>handleSubmit(e)}>
+                    {isUpdate ? "Update Note" : "Create Note"}
+                </button>
             </form>
             <ul>
                 {data?.map(item => (
                     <li key={item.id}>
                         <span>{item.title}</span>
-                        <button onClick={() => removeNoteMutation.mutate(item.id)}>Remove button</button>
+                        <button onClick={() => editHandler(item.id)}>Edit</button>
+                        <button onClick={() => removeNoteMutation.mutate(item.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
