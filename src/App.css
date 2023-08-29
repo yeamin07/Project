@@ -1,4 +1,48 @@
 .App {
   text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: url(background.jpg);
+  height: 100vh;
+  color: white;
 }
+
+.Menu, .Quiz, .EndScreen{
+  width: 500px;
+  height: 500px;
+  border-radius: 10px;
+  background-color: transparent;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Menu input,button{
+  width:300px;
+  height: 50px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+button {
+  font-weight: 700;
+}
+
+button:hover{
+  cursor:pointer;
+  background-color: black;
+  color:white;
+  transform: scale(0.9);
+  transition: 0.1s;
+}
+
+
+
+
 
