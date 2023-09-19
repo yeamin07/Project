@@ -1,17 +1,33 @@
-import React from 'react'
+import { useState } from 'react'
+import Logo from '../assets/pizzaLogo.png'
 import { Link } from 'react-router-dom'
-import { ShoppingCart } from 'phosphor-react'
-import './navbar.css'
+import '../styles/Navbar.css'
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 const Navbar = () => {
+  const [openLinks, setOpenLinks] = useState(false)
+
+  const toggleNavbar = () => {
+    setOpenLinks(!openLinks)
+  }
   return (
-    <div className="navbar">
-      <div className="links">
-        <Link to="/">Shop</Link>
-        <Link to="/contact">Contact</Link>
-        <Link to="/cart">
-          <ShoppingCart size={32} />
-        </Link>
+    <div className='navbar'>
+      <div className="leftSide" id={openLinks ? 'open' : 'false'}>
+        <img src={Logo} />
+        <div className="hiddenLinks">
+          <Link to='/' >Home</Link>
+          <Link to='/menu' >Menu</Link>
+          <Link to='/about' >About</Link>
+          <Link to='/contact'>Contact</Link>
+        </div>
+      </div>
+      <div className="rightSide">
+        <Link to='/' >Home</Link>
+        <Link to='/menu' >Menu</Link>
+        <Link to='/about' >About</Link>
+        <Link to='/contact'>Contact</Link>
+        <button onClick={toggleNavbar} ><MenuIcon /></button>
       </div>
     </div>
   )
